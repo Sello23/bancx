@@ -1,4 +1,4 @@
-package com.bancx.sello.loan.infrastructure;
+package com.bancx.sello.loan.infrastructure.controller;
 
 import com.bancx.sello.infrastructure.exception.LoanNotFoundException;
 import com.bancx.sello.loan.application.LoanService;

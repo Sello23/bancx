@@ -3,6 +3,7 @@ package com.bancx.sello.payment.application;
 import com.bancx.sello.loan.application.LoanService;
 import com.bancx.sello.loan.domain.model.Loan;
 import com.bancx.sello.loan.domain.model.LoanStatus;
+import com.bancx.sello.payment.domain.model.Payment;
 import com.bancx.sello.payment.domain.repository.PaymentRepository;
 import com.bancx.sello.payment.domain.exception.OverpaymentException;
 import org.junit.jupiter.api.Test;
@@ -56,5 +57,21 @@ class PaymentServiceTest {
 
         assertEquals(new BigDecimal("0.00"), loan.getLoanAmount());
         assertEquals(LoanStatus.SETTLED, loan.getStatus());
+    }
+
+    @Test
+    void shouldProcessPaymentSuccessfully() {
+        String loanId = "L1";
+        BigDecimal amount = new BigDecimal("200.00");
+        Loan loan = new Loan(loanId, new BigDecimal("1000.00"), 12, LoanStatus.ACTIVE);
+
+        when(loanService.getLoanById(loanId)).thenReturn(loan);
+        when(paymentRepository.save(any(Payment.class))).thenAnswer(i -> i.getArguments()[0]);
+
+        Payment result = paymentService.processPayment(loanId, amount);
+
+        assertNotNull(result.getPaymentId());
+        assertEquals(amount, result.getAmount());
+        assertEquals(new BigDecimal("800.00"), loan.getLoanAmount());
     }
 }

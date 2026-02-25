@@ -22,7 +22,7 @@ public class PaymentService {
     private final LoanService loanService;
 
     @Transactional
-    public void processPayment(String loanId, BigDecimal amount) {
+    public Payment processPayment(String loanId, BigDecimal amount) {
         Loan loan = loanService.getLoanById(loanId);
 
         if (amount.compareTo(loan.getLoanAmount()) > 0) {
@@ -30,7 +30,6 @@ public class PaymentService {
         }
 
         loan.setLoanAmount(loan.getLoanAmount().subtract(amount));
-
         if (loan.getLoanAmount().compareTo(BigDecimal.ZERO) == 0) {
             loan.setStatus(LoanStatus.SETTLED);
         }
@@ -42,6 +41,6 @@ public class PaymentService {
                 .loan(loan)
                 .build();
 
-        paymentRepository.save(payment);
+        return paymentRepository.save(payment);
     }
 }

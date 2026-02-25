@@ -1,4 +1,4 @@
-package com.bancx.sello.loan.infrastructure;
+package com.bancx.sello.loan.infrastructure.controller;
 
 import com.bancx.sello.loan.application.LoanService;
 import com.bancx.sello.loan.domain.model.Loan;
