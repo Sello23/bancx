@@ -11,7 +11,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
@@ -56,7 +55,8 @@ class LoanPaymentIntegrationTest {
                 "/payments/loan/" + loanId,
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<PaymentResponseDTO>>() {}
+                new ParameterizedTypeReference<List<PaymentResponseDTO>>() {
+                }
         );
 
         assertEquals(HttpStatus.OK, historyResponse.getStatusCode());
