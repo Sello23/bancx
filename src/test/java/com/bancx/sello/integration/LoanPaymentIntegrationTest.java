@@ -28,7 +28,8 @@ class LoanPaymentIntegrationTest {
     void shouldCompleteFullLoanLifecycle() {
         // 1. Create a Loan
         LoanRequestDTO loanRequest = new LoanRequestDTO(new BigDecimal("1000.00"), 12);
-        ResponseEntity<LoanResponseDTO> loanResponse = restTemplate.postForEntity("/loans", loanRequest, LoanResponseDTO.class);
+        ResponseEntity<LoanResponseDTO> loanResponse = restTemplate.postForEntity("/loans", loanRequest,
+                LoanResponseDTO.class);
 
         assertEquals(HttpStatus.CREATED, loanResponse.getStatusCode());
         assertNotNull(loanResponse.getBody());
@@ -37,7 +38,8 @@ class LoanPaymentIntegrationTest {
 
         // 2. Process First Payment (400.00)
         PaymentRequestDTO payment1 = new PaymentRequestDTO(loanId, new BigDecimal("400.00"));
-        ResponseEntity<PaymentResponseDTO> payResp1 = restTemplate.postForEntity("/payments", payment1, PaymentResponseDTO.class);
+        ResponseEntity<PaymentResponseDTO> payResp1 = restTemplate.postForEntity("/payments", payment1,
+                PaymentResponseDTO.class);
         assertEquals(HttpStatus.CREATED, payResp1.getStatusCode());
 
         // 3. Process Second Payment (600.00) - Should settle the loan
@@ -45,7 +47,8 @@ class LoanPaymentIntegrationTest {
         restTemplate.postForEntity("/payments", payment2, PaymentResponseDTO.class);
 
         // 4. Verify Loan is SETTLED and balance is 0
-        ResponseEntity<LoanResponseDTO> updatedLoan = restTemplate.getForEntity("/loans/" + loanId, LoanResponseDTO.class);
+        ResponseEntity<LoanResponseDTO> updatedLoan = restTemplate.getForEntity("/loans/" +
+                loanId, LoanResponseDTO.class);
         assertNotNull(updatedLoan.getBody());
         assertEquals(new BigDecimal("0.00"), updatedLoan.getBody().getLoanAmount());
         assertEquals("SETTLED", updatedLoan.getBody().getStatus().toString());
@@ -63,7 +66,9 @@ class LoanPaymentIntegrationTest {
         List<PaymentResponseDTO> history = historyResponse.getBody();
         assertNotNull(history);
         assertEquals(2, history.size());
-        assertTrue(history.stream().anyMatch(p -> p.getAmount().compareTo(new BigDecimal("400.00")) == 0));
-        assertTrue(history.stream().anyMatch(p -> p.getAmount().compareTo(new BigDecimal("600.00")) == 0));
+        assertTrue(history.stream().anyMatch(p ->
+                p.getAmount().compareTo(new BigDecimal("400.00")) == 0));
+        assertTrue(history.stream().anyMatch(p ->
+                p.getAmount().compareTo(new BigDecimal("600.00")) == 0));
     }
 }
