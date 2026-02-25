@@ -6,6 +6,7 @@ import com.bancx.sello.loan.domain.model.LoanStatus;
 import com.bancx.sello.payment.domain.model.Payment;
 import com.bancx.sello.payment.domain.repository.PaymentRepository;
 import com.bancx.sello.payment.domain.exception.OverpaymentException;
+import com.bancx.sello.payment.infrastructure.dto.PaymentResponseDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -20,9 +22,12 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class PaymentServiceTest {
 
-    @Mock private PaymentRepository paymentRepository;
-    @Mock private LoanService loanService;
-    @InjectMocks private PaymentService paymentService;
+    @Mock
+    private PaymentRepository paymentRepository;
+    @Mock
+    private LoanService loanService;
+    @InjectMocks
+    private PaymentService paymentService;
 
     @Test
     void shouldProcessPaymentAndReduceBalance() {
@@ -73,5 +78,21 @@ class PaymentServiceTest {
         assertNotNull(result.getPaymentId());
         assertEquals(amount, result.getAmount());
         assertEquals(new BigDecimal("800.00"), loan.getLoanAmount());
+    }
+
+    @Test
+    void shouldReturnPaymentHistoryForLoan() {
+        String loanId = "L1";
+        Loan loan = Loan.builder().loanId(loanId).build();
+        Payment p1 = Payment.builder().paymentId("P1").loan(loan).build();
+        Payment p2 = Payment.builder().paymentId("P2").loan(loan).build();
+
+        when(paymentRepository.findByLoan_LoanId(loanId)).thenReturn(java.util.List.of(p1, p2));
+
+        List<PaymentResponseDTO> history = paymentService.getPaymentHistory(loanId);
+
+        assertEquals(2, history.size());
+        assertEquals("P1", history.get(0).getPaymentId());
+        assertEquals("P2", history.get(1).getPaymentId());
     }
 }

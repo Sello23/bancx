@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/payments")
 @RequiredArgsConstructor
@@ -21,5 +23,10 @@ public class PaymentController {
     public ResponseEntity<PaymentResponseDTO> process(@Valid @RequestBody PaymentRequestDTO request) {
         Payment payment = paymentService.processPayment(request.getLoanId(), request.getPaymentAmount());
         return new ResponseEntity<>(PaymentResponseDTO.fromEntity(payment), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/loan/{loanId}")
+    public ResponseEntity<List<PaymentResponseDTO>> getHistory(@PathVariable String loanId) {
+        return ResponseEntity.ok(paymentService.getPaymentHistory(loanId));
     }
 }

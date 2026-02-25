@@ -30,14 +30,22 @@ class LoanControllerTest {
 
     @Test
     void shouldCreateLoan() throws Exception {
-        Loan loan = new Loan("L1", new BigDecimal("1000.00"), 12, LoanStatus.ACTIVE);
-        when(loanService.createLoan(any(), any())).thenReturn(loan);
+        BigDecimal amount = new BigDecimal("1000.00");
+        Integer term = 12;
+        Loan mockLoan = new Loan("L1", amount, term, LoanStatus.ACTIVE);
+
+        when(loanService.createLoan(any(BigDecimal.class), any(Integer.class)))
+                .thenReturn(mockLoan);
 
         mockMvc.perform(post("/loans")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"loanAmount\": 1000.00, \"term\": 12}"))
-                .andExpect(status().isCreated())
-                .andExpect(content().string(containsString("LoanResponseDTO{loanId='L1'")));
+                .andExpect(status().isCreated()) // Verify 201 Created
+                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.loanId").value("L1"))
+                .andExpect(jsonPath("$.loanAmount").value(1000.00))
+                .andExpect(jsonPath("$.term").value(term))
+                .andExpect(jsonPath("$.status").value("ACTIVE"));
     }
 
     @Test

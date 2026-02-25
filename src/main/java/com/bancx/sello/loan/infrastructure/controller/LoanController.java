@@ -18,11 +18,10 @@ public class LoanController {
     private final LoanService loanService;
 
     @PostMapping
-    public ResponseEntity<String> create(@Valid @RequestBody LoanRequestDTO request) {
+    public ResponseEntity<LoanResponseDTO> create(@Valid @RequestBody LoanRequestDTO request) {
         Loan loan = loanService.createLoan(request.getLoanAmount(), request.getTerm());
-        return new ResponseEntity<>(LoanResponseDTO.fromEntity(loan).toString(), HttpStatus.CREATED);
+        return new ResponseEntity<>(LoanResponseDTO.fromEntity(loan), HttpStatus.CREATED);
     }
-
     @GetMapping("/{loanId}")
     public ResponseEntity<LoanResponseDTO> getLoan(@PathVariable String loanId) {
         Loan loan = loanService.getLoanById(loanId);

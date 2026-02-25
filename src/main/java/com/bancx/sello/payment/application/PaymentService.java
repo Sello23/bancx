@@ -6,12 +6,14 @@ import com.bancx.sello.loan.domain.model.LoanStatus;
 import com.bancx.sello.payment.domain.exception.OverpaymentException;
 import com.bancx.sello.payment.domain.model.Payment;
 import com.bancx.sello.payment.domain.repository.PaymentRepository;
+import com.bancx.sello.payment.infrastructure.dto.PaymentResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -42,5 +44,14 @@ public class PaymentService {
                 .build();
 
         return paymentRepository.save(payment);
+    }
+
+    public List<PaymentResponseDTO> getPaymentHistory(String loanId) {
+        loanService.getLoanById(loanId);
+
+        return paymentRepository.findByLoan_LoanId(loanId)
+                .stream()
+                .map(PaymentResponseDTO::fromEntity)
+                .toList();
     }
 }
