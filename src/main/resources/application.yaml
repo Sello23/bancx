@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: bancx-sello
+  datasource:
+    url: jdbc:h2:mem:bancx_db
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
