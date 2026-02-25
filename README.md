@@ -52,13 +52,6 @@ To run all tests:
 ```bash
 ./gradlew test
 
-# BancX Loan Management System
-
-A professional, TDD-driven Spring Boot application for managing loan lifecycles and payment processing. This project 
-demonstrates Clean Architecture principles, Domain-Driven Design (DDD), and robust error handling using RFC 7807.
-
----
-
 ## ## Features
 
 * **Loan Management**: Create and retrieve loans with automated status tracking (ACTIVE, SETTLED).
