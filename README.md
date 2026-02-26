@@ -5,53 +5,7 @@ This project demonstrates Clean Architecture principles, Domain-Driven Design (D
 
 ---
 
-## Getting Started
-
-The server will start at `http://localhost:8080`.
-* **H2 Console:** `http://localhost:8080/h2-console`
-* **JDBC URL:** `jdbc:h2:mem:loandb`
-
----
-
-## API Documentation
-
-### Loan Endpoints
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/loans` | Create a new loan. |
-| `GET` | `/loans/{loanId}` | Retrieve loan details and current balance. |
-
-### Payment Endpoints
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/payments` | Process a payment against a loan. |
-| `GET` | `/payments/loan/{loanId}` | Retrieve transaction history for a specific loan. |
-
----
-## Design Patterns & Decisions
-
-* **DTO Pattern**: Separate Request/Response DTOs are used to ensure the internal Domain Entities (DAO) never leak
-* to the API consumer.
-* **Static Factory Methods**: Mapping logic (e.g., `fromEntity`) is encapsulated within DTOs for cleaner controllers.
-* **RFC 7807**: All errors (404 Not Found, 409 Conflict, etc.) are returned as "Problem Details" to provide consistent,
-* machine-readable error context.
-* **Transactional Integrity**: The `@Transactional` boundary in `PaymentService` ensures that loan balances are only
-* updated if the payment record is successfully persisted.
-
----
-
-## Testing Strategy
-
-This project follows a strict TDD approach:
-* **Unit Tests**: Testing business logic in isolation using Mockito (e.g., `PaymentServiceTest`).
-* **Controller Tests**: Verifying API contracts and validation using `WebMvcTest` and `MockMvc` with `jsonPath` assertions.
-* **Integration Tests**: Validating the full E2E lifecycle (Loan -> Payment -> History) using `TestRestTemplate` and an H2 database.
-
-To run all tests:
-```bash
-./gradlew test
-
-## ## Features
+## Features
 
 * **Loan Management**: Create and retrieve loans with automated status tracking (ACTIVE, SETTLED).
 * **Payment Processing**: Real-time balance reduction with atomic transaction management.
@@ -61,7 +15,13 @@ To run all tests:
 
 ---
 
-### ### Installation
+## Getting Started
+
+The server will start at `http://localhost:8080`.
+* **H2 Console:** `http://localhost:8080/h2-console`
+* **JDBC URL:** `jdbc:h2:mem:loandb`
+
+### Installation
 1.  **Clone the repository:**
     ```bash
     git clone [https://github.com/bancx/sello-loan-system.git](https://github.com/bancx/sello-loan-system.git)
@@ -75,44 +35,44 @@ To run all tests:
     ./gradlew build
     ```
 
-### ### Running the Application
+### Running the Application
 ```bash
 ./gradlew bootRun
 
-Below are a list of curl commands that prove the functionality of the endpoints
 
----
+API Documentation Loan
 
-## Interactive API Sandbox
+EndpointsMethodEndpointDescriptionPOST/loansCreate a new loan.
+GET/loans/{loanId}Retrieve loan details and current balance.
+Payment EndpointsMethodEndpointDescriptionPOST/paymentsProcess a payment against a loan.
+GET/payments/loan/{loanId}Retrieve transaction history for a specific loan.
 
-Use these commands to manually verify the logic defined in our unit tests. 
+Testing Strategy
 
-### 1. [Test] Create Loan
-**Unit Test Match:** `shouldCreateLoan()`
-```bash
-curl -X POST http://localhost:8080/loans \
+This project follows a strict TDD approach:
+
+Unit Tests: Testing business logic in isolation using Mockito (e.g., PaymentServiceTest).Controller Tests: Verifying API contracts and validation using WebMvcTest and MockMvc with jsonPath assertions.
+
+Integration Tests: Validating the full E2E lifecycle (Loan -> Payment -> History) using TestRestTemplate and an H2 database.
+
+To run all tests:Bash./gradlew test
+
+Interactive API Sandbox (CURL)Use these commands to manually verify the logic defined in our unit tests.
+
+1. [Test] Create LoanUnit Test Match: shouldCreateLoan()Bashcurl -X POST http://localhost:8080/loans \
 -H "Content-Type: application/json" \
 -d '{"loanAmount": 1000.00, "term": 12}'
-
-From the LoanId that you get from the above:
-
-curl -i -X POST http://localhost:8080/payments \
+Take note of the loanId returned in the response for the following steps.2. [Test] Process Partial PaymentScenario: Pay R200.00 toward the loan.Bashcurl -i -X POST http://localhost:8080/payments \
 -H "Content-Type: application/json" \
 -d '{
-    "loadId": "{loanId}",
+    "loanId": "{loanId}",
     "paymentAmount": 200.00
 }'
-
-Check that the loan balance is now 800.00
-curl -X GET http://localhost:8080/loans/{loanId}
-
-Make a final payment for the remaining balance (800.00). This should trigger the code to flip the status to SETTLED
-curl -i -X POST http://localhost:8080/payments \
+3. [Test] Verify Partial BalanceScenario: Check that the loan balance is now 800.00 and status is ACTIVE.Bashcurl -X GET http://localhost:8080/loans/{loanId}
+4. [Test] Final Payment (Settlement)Scenario: Make a final payment for the remaining balance (800.00). This triggers the status flip to SETTLED.Bashcurl -i -X POST http://localhost:8080/payments \
 -H "Content-Type: application/json" \
 -d '{
     "loanId": "{loanId}",
     "paymentAmount": 800.00
 }'
-
-Run this to see if the status is now SETTLED and balance is 0.00.
-curl -X GET http://localhost:8080/loans/{loanId}
+5. [Test] Verify SettlementScenario: Confirm the status is now SETTLED and balance is 0.00.Bashcurl -X GET http://localhost:8080/loans/{loanId}
