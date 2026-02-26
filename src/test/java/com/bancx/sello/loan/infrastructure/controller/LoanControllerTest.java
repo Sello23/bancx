@@ -1,6 +1,6 @@
 package com.bancx.sello.loan.infrastructure.controller;
 
-import com.bancx.sello.infrastructure.exception.LoanNotFoundException;
+import com.bancx.sello.loan.domain.exception.LoanNotFoundException;
 import com.bancx.sello.loan.application.LoanService;
 import com.bancx.sello.loan.domain.model.Loan;
 import com.bancx.sello.loan.domain.model.LoanStatus;
@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

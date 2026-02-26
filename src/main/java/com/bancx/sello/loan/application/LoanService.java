@@ -1,6 +1,6 @@
 package com.bancx.sello.loan.application;
 
-import com.bancx.sello.infrastructure.exception.LoanNotFoundException;
+import com.bancx.sello.loan.domain.exception.LoanNotFoundException;
 import com.bancx.sello.loan.domain.model.Loan;
 import com.bancx.sello.loan.domain.model.LoanStatus;
 import com.bancx.sello.loan.domain.repository.LoanRepository;

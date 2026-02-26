@@ -1,4 +1,4 @@
-package com.bancx.sello.infrastructure.exception;
+package com.bancx.sello.loan.domain.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
