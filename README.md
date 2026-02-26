@@ -28,6 +28,17 @@ The server will start at `http://localhost:8080`.
 | `GET` | `/payments/loan/{loanId}` | Retrieve transaction history for a specific loan. |
 
 ---
+## Design Patterns & Decisions
+
+* **DTO Pattern**: Separate Request/Response DTOs are used to ensure the internal Domain Entities (DAO) never leak
+* to the API consumer.
+* **Static Factory Methods**: Mapping logic (e.g., `fromEntity`) is encapsulated within DTOs for cleaner controllers.
+* **RFC 7807**: All errors (404 Not Found, 409 Conflict, etc.) are returned as "Problem Details" to provide consistent,
+* machine-readable error context.
+* **Transactional Integrity**: The `@Transactional` boundary in `PaymentService` ensures that loan balances are only
+* updated if the payment record is successfully persisted.
+
+---
 
 ## Testing Strategy
 
