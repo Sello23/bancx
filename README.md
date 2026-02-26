@@ -40,7 +40,7 @@ The server will start at `http://localhost:8080`.
 ./gradlew bootRun
 
 
-📖 API DocumentationLoan
+API Documentation Loan
 
 EndpointsMethodEndpointDescriptionPOST/loansCreate a new loan.
 GET/loans/{loanId}Retrieve loan details and current balance.
