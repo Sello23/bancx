@@ -22,23 +22,54 @@ The server will start at `http://localhost:8080`.
 * **JDBC URL:** `jdbc:h2:mem:loandb`
 
 ### Installation
-1.  **Clone the repository:**
+1.  **Clone and Navigate:**
     ```bash
-    git clone [https://github.com/bancx/sello-loan-system.git](https://github.com/bancx/sello-loan-system.git)
+    git clone [https://github.com/Sello23/bancx.git](https://github.com/Sello23/bancx.git)
+    cd bancx
     ```
-2.  **Navigate to the project directory:**
-    ```bash
-    cd sello-loan-system
-    ```
-3.  **Build the project:**
+2   **Build the project:**
     ```bash
     ./gradlew build
     ```
 
+## DevOps & Containerization
+
+This project is fully containerized using a **Multi-Stage Docker build**. 
+This ensures that the application builds and runs in a consistent environment, regardless of the host machine's configuration.
+
+### The Docker Advantage
+* **Zero-Installation**: You don't need Java 21 or Gradle installed. Docker handles the build process internally.
+* **Consistency**: The `.dockerignore` file ensures that local Mac/Windows build artifacts or IDE settings never leak into the container.
+* **Security**: We use a lightweight `JRE` image for the final runtime, reducing the attack surface.
+
+### Running the System
+To build and start the entire stack:
+```bash
+
+docker compose up --build
+
+## 🚀 Getting Started (Docker - Recommended)
+
+The fastest way to run the system without installing Java or Gradle locally.
+
+1.  **Clone and Navigate:**
+    ```bash
+    git clone [https://github.com/Sello23/bancx.git](https://github.com/Sello23/bancx.git)
+    cd bancx
+    ```
+
+2.  **Run with Docker Compose:**
+    ```bash
+    docker compose up --build
+    ```
+
+3.  **Access Points:**
+    * **API:** `http://localhost:8080`
+    * **H2 Console:** `http://localhost:8080/h2-console` (JDBC: `jdbc:h2:mem:loandb`)
+
 ### Running the Application
 ```bash
 ./gradlew bootRun
-
 
 API Documentation Loan
 
@@ -59,7 +90,7 @@ To run all tests:Bash./gradlew test
 
 Interactive API Sandbox (CURL)Use these commands to manually verify the logic defined in our unit tests.
 
-1. [Test] Create LoanUnit Test Match: shouldCreateLoan()Bashcurl -X POST http://localhost:8080/loans \
+1. [Test] Create Loan Unit Test Match: shouldCreateLoan()Bashcurl -X POST http://localhost:8080/loans \
 -H "Content-Type: application/json" \
 -d '{"loanAmount": 1000.00, "term": 12}'
 Take note of the loanId returned in the response for the following steps.2. [Test] Process Partial PaymentScenario: Pay R200.00 toward the loan.Bashcurl -i -X POST http://localhost:8080/payments \
