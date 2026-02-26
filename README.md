@@ -49,7 +49,13 @@ GET/payments/loan/{loanId}Retrieve transaction history for a specific loan.
 
 Testing Strategy
 
-This project follows a strict TDD approach:Unit Tests: Testing business logic in isolation using Mockito (e.g., PaymentServiceTest).Controller Tests: Verifying API contracts and validation using WebMvcTest and MockMvc with jsonPath assertions.Integration Tests: Validating the full E2E lifecycle (Loan -> Payment -> History) using TestRestTemplate and an H2 database.To run all tests:Bash./gradlew test
+This project follows a strict TDD approach:
+
+Unit Tests: Testing business logic in isolation using Mockito (e.g., PaymentServiceTest).Controller Tests: Verifying API contracts and validation using WebMvcTest and MockMvc with jsonPath assertions.
+
+Integration Tests: Validating the full E2E lifecycle (Loan -> Payment -> History) using TestRestTemplate and an H2 database.
+
+To run all tests:Bash./gradlew test
 
 Interactive API Sandbox (CURL)Use these commands to manually verify the logic defined in our unit tests.
 
