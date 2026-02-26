@@ -59,8 +59,9 @@ class PaymentControllerTest {
         mockMvc.perform(post("/payments")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"loanId\": \"L1\", \"paymentAmount\": 5000.00}"))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.title").value("Payment Error"))
+                .andExpect(status().isConflict()) // 409
+                .andExpect(jsonPath("$.title").value("Overpayment Error"))
+                .andExpect(jsonPath("$.detail").value("Overpayment detected"))
                 .andExpect(jsonPath("$.type").value("https://bancx.sello.com/errors/overpayment-detected"));
     }
 }
