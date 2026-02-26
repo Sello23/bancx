@@ -29,18 +29,6 @@ The server will start at `http://localhost:8080`.
 
 ---
 
-## Design Patterns & Decisions
-
-* **DTO Pattern**: Separate Request/Response DTOs are used to ensure the internal Domain Entities (DAO) never leak 
-* to the API consumer.
-* **Static Factory Methods**: Mapping logic (e.g., `fromEntity`) is encapsulated within DTOs for cleaner controllers.
-* **RFC 7807**: All errors (404 Not Found, 409 Conflict, etc.) are returned as "Problem Details" to provide consistent, 
-* machine-readable error context.
-* **Transactional Integrity**: The `@Transactional` boundary in `PaymentService` ensures that loan balances are only 
-* updated if the payment record is successfully persisted.
-
----
-
 ## Testing Strategy
 
 This project follows a strict TDD approach:
@@ -62,22 +50,6 @@ To run all tests:
 
 ---
 
-## ## Tech Stack
-
-* **Java 21**: Leveraging modern language features like Records and simplified Stream APIs.
-* **Spring Boot 3.x**: Core framework for dependency injection and REST services.
-* **Spring Data JPA**: For abstraction over the H2 database.
-* **Lombok**: To reduce boilerplate code in DTOs and Entities.
-* **JUnit 5 & Mockito**: Driving the development through Test-Driven Development (TDD).
-
----
-
-## ## Getting Started
-
-### ### Prerequisites
-* JDK 21 or higher
-* Gradle 8.x
-
 ### ### Installation
 1.  **Clone the repository:**
     ```bash
@@ -95,3 +67,41 @@ To run all tests:
 ### ### Running the Application
 ```bash
 ./gradlew bootRun
+
+Below are a list of curl commands that prove the functionality of the endpoints
+
+---
+
+## Interactive API Sandbox
+
+Use these commands to manually verify the logic defined in our unit tests. 
+
+### 1. [Test] Create Loan
+**Unit Test Match:** `shouldCreateLoan()`
+```bash
+curl -X POST http://localhost:8080/loans \
+-H "Content-Type: application/json" \
+-d '{"loanAmount": 1000.00, "term": 12}'
+
+From the LoanId that you get from the above:
+
+curl -i -X POST http://localhost:8080/payments \
+-H "Content-Type: application/json" \
+-d '{
+    "loadId": "{loanId}",
+    "paymentAmount": 200.00
+}'
+
+Check that the loan balance is now 800.00
+curl -X GET http://localhost:8080/loans/{loanId}
+
+Make a final payment for the remaining balance (800.00). This should trigger the code to flip the status to SETTLED
+curl -i -X POST http://localhost:8080/payments \
+-H "Content-Type: application/json" \
+-d '{
+    "loanId": "{loanId}",
+    "paymentAmount": 800.00
+}'
+
+Run this to see if the status is now SETTLED and balance is 0.00.
+curl -X GET http://localhost:8080/loans/{loanId}

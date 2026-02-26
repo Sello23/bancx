@@ -22,6 +22,7 @@ public class LoanController {
         Loan loan = loanService.createLoan(request.getLoanAmount(), request.getTerm());
         return new ResponseEntity<>(LoanResponseDTO.fromEntity(loan), HttpStatus.CREATED);
     }
+
     @GetMapping("/{loanId}")
     public ResponseEntity<LoanResponseDTO> getLoan(@PathVariable String loanId) {
         Loan loan = loanService.getLoanById(loanId);
