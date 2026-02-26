@@ -1,21 +1,19 @@
-FROM eclipse-temurin:21-jdk-jammy AS build
+FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 
 COPY gradlew .
 COPY gradle gradle
-COPY build.gradle.kts settings.gradle.kts ./
-
 RUN chmod +x gradlew
+
+COPY build.gradle.kts settings.gradle.kts ./
 RUN ./gradlew dependencies --no-daemon
 
 COPY src src
-RUN ./gradlew build -x test --no-daemon
+RUN ./gradlew bootJar --no-daemon
 
-FROM eclipse-temurin:21-jre-jammy
+FROM --platform=$TARGETPLATFORM eclipse-temurin:21-jre
 WORKDIR /app
-
 COPY --from=build /app/build/libs/*.jar app.jar
 
 EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-XX:MaxRAMPercentage=75","-jar","app.jar"]
