@@ -17,8 +17,8 @@ This project demonstrates Clean Architecture principles, Domain-Driven Design (D
 
 ## Getting Started
 
-The server will start at `http://localhost:8080`.
-* **H2 Console:** `http://localhost:8080/h2-console`
+The server will start at `http://localhost:8081`.
+* **H2 Console:** `http://localhost:8081/h2-console`
 * **JDBC URL:** `jdbc:h2:mem:loandb`
 
 ### Installation
@@ -64,8 +64,8 @@ The fastest way to run the system without installing Java or Gradle locally.
     ```
 
 3.  **Access Points:**
-    * **API:** `http://localhost:8080`
-    * **H2 Console:** `http://localhost:8080/h2-console` (JDBC: `jdbc:h2:mem:loandb`)
+    * **API:** `http://localhost:8081`
+    * **H2 Console:** `http://localhost:8081/h2-console` (JDBC: `jdbc:h2:mem:loandb`)
 
 ### Running the Application
 ```bash
